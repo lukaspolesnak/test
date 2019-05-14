@@ -1,0 +1,112 @@
+
+# (format datumov si naspecifikujte aky chcete, mozno by bol najlepsi epoch v sekundach, vieme nahravat hocaky)
+
+"customer_id":integer,
+"email":string,
+"properties":
+	{
+	"lname":string,
+	"fname":string,
+	"title":string,
+	"gender":string, # vales are (M, F)
+	"birthdate":date, 
+	"subscribed":integer , #(values are 0,1)
+	"registration_date":date,
+	"phone":string,
+	"city":string,
+	"country":string,
+	"zip":string,
+	"overseer":integer, #(values are 0,1)
+	"anonymous":integer, #(values are 0,1)
+	"km_totals":integer,
+	},
+"purchases":[
+	{
+	"item_id":integer,
+	"item_name":string,
+	"timestamp":date,
+	"valid_from":date,
+	"valid_to":date,
+	"category1":string,
+	"category2":string,
+	"price":real(decimal),
+	"payment_type":string
+	}
+],
+accesses:[
+	{
+	"timestamp":date,
+	"area":string,
+	}
+],
+campaign_stats:[
+	{
+	"campaignid":integer,
+	"campaign_name":string,
+	"sendstamp":date,
+	"status":string, #values are (sent, error, bounce)
+	"opened":integer, #values are (0,1)
+	"clicked":integer, #values are (0,1)
+	"clicked_links":List, # example(["l1","l2","l3"]) 
+	"unsub":integer, #values are (0,1)
+	}
+	]
+
+	
+	class CustPropertis(DjongoModels.Model):
+	lname = DjongoModels.CharField(default=None,max_length=50)
+	fname = DjongoModels.CharField(default=None,max_length=50)
+	titl = DjongoModels.CharField(default=None,max_length=10)
+	gender = DjongoModels.CharField(default=None,max_length=1)# vales are (M, F)
+	birthdate = DjongoModels.DateTimeField(default=None, blank=True)
+	subscribed = DjongoModels.IntegerField(default=None) #(values are 0,1)
+	registration_date = DjongoModels.DateTimeField(default=None, blank=True)
+	phone = DjongoModels.CharField(default=None,max_length=50)
+	city = DjongoModels.CharField(default=None,max_length=50)
+	country = DjongoModels.CharField(default=None,max_length=50)
+	zip = DjongoModels.CharField(default=None,max_length=10)
+	overseer = DjongoModels.IntegerField(default=None) #(values are 0,1)
+	anonymous = DjongoModels.IntegerField(default=None) #(values are 0,1)
+	km_totals = DjongoModels.IntegerField(default=None)
+
+
+
+class CustPurchuase(DjongoModels.Model):
+	item_id = DjongoModels.CharField(default=None,max_length=100)
+	item_name = DjongoModels.CharField(default=None,max_length=100)
+	timestamp = DjongoModels.DateTimeField(default=None, blank=True)
+	valid_from = DjongoModels.DateTimeField(default=None, blank=True)
+	valid_to = DjongoModels.DateTimeField(default=None, blank=True)
+	category1 = DjongoModels.CharField(default=None,max_length=100)
+	category2 = DjongoModels.CharField(default=None,max_length=100)
+	price = DjongoModels.FloatField()
+	payment_type = DjongoModels.CharField(default=None,max_length=50)
+
+class CustAccesses(DjongoModels.Model):
+	timestamp = DjongoModels.DateTimeField(default=None, blank=True)
+	area = DjongoModels.CharField(default=None,max_length=100)
+
+class CustCampStats(DjongoModels.Model):
+	campaignid = DjongoModels.CharField(default=None,max_length=100)
+	campaign_name = DjongoModels.CharField(default=None,max_length=100)
+	sendstamp = DjongoModels.DateTimeField(default=None, blank=True)
+	status = DjongoModels.CharField(default=None,max_length=20)
+	opened = DjongoModels.IntegerField(default=None)
+	clicked = DjongoModels.IntegerField(default=None)
+	clicked_links = DjongoModels.ListField(default=None,max_length=100)
+	unsub = DjongoModels.IntegerField(default=None)
+	timestamp = DjongoModels.DateTimeField(default=None, blank=True)
+
+
+class Customers2(DjongoModels.Model):
+	customer_id = DjongoModels.IntegerField()
+	email = DjongoModels.CharField(max_length=100)
+	properties = DjongoModels.EmbeddedModelField(
+        model_container=CustPropertis
+    )
+	objects = DjongoModels.DjongoManager()
+
+	
+	
+	
+'customer_id': 1, 'email': 'lukas.polesnak@pricewise.sk', 'properties': {'lname': 'Polesnak', 'fname': 'Lukas', 'gender': 'm', 'birthdate': datetime.datetime(1988, 8, 7, 0, 0), 'subscribed': 1, 'registration_date': datetime.datetime(2009, 1, 1, 0, 0), 'phon': '000000000', 'city': 'Ba', 'country': 'SK', 'zip': '88888', 'overseer': '0', 'anonymous': 0, 'km_totals': 0}, 'purchases': [{'item_id': 1, 'item_name': 'test', 'timestamp': datetime.datetime(2019, 1, 1, 0, 0), 'valid_from': datetime.datetime(2019, 2, 1, 0, 0), 'valid_to': datetime.datetime(2019, 2, 10, 0, 0), 'category1': 'skipass', 'category2': 'erwachsen', 'price': 19.01, 'payment_type': 'cash'}, {'item_id': '2', 'item_name': 'test2', 'timestamp': datetime.datetime(2019, 1, 10, 0, 0), 'valid_from': datetime.datetime(2019, 3, 1, 0, 0), 'valid_to': datetime.datetime(2019, 3, 2, 0, 0), 'category1': 'test', 'category2': 'test', 'price': 18.23, 'payment_type': 'card'}], 'accesses': [{'timestamp': datetime.datetime(2019, 2, 1, 0, 0), 'area': 'annaberg'}], 'campaigns_stats': ['']
